@@ -1,27 +1,27 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
-
+using WebApp.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
+{
     options.AddPolicy("AllowAll", builder => builder
-        .AllowAnyOrigin()
+        .SetIsOriginAllowed(_ => true)
         .AllowAnyMethod()
         .AllowAnyHeader()
-));
+        .AllowCredentials());
+});
 
 builder.Services.AddHttpContextAccessor();
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => { })
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddSignalR();
+
 builder.Services.AddRazorPages();
 
 builder.Services.AddControllers();
@@ -44,15 +44,18 @@ else
 }
 
 //app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseFileServer();
 
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorPages();
-app.MapControllers();
+app.UseEndpoints(opts =>
+{
+    opts.MapControllers();
+    opts.MapHub<QuizHub>("/quiz");
+});
 
 app.UseSwagger();
 app.UseSwaggerUI();
