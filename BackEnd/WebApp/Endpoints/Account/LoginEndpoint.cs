@@ -4,7 +4,7 @@ using WebApp.Data;
 using WebApp.Data.Models;
 using WebApp.Helpers;
 
-namespace WebApp.Endpoints.Login;
+namespace WebApp.Endpoints.Account;
 
 [Route("/api")]
 public class LoginEndpoint
@@ -12,7 +12,7 @@ public class LoginEndpoint
     .WithRequest<LoginRequest>
     .WithActionResult<User>
 {
-    private ApplicationDbContext _db { get; set; }
+    private readonly ApplicationDbContext _db;
 
     public LoginEndpoint(ApplicationDbContext db)
     {
@@ -32,7 +32,7 @@ public class LoginEndpoint
             return BadRequest($"Wrong password");
 
         user.Token = Guid.NewGuid();
-        user.TokenExpiration = DateTime.UtcNow.AddHours(1);
+        user.TokenExpiration = DateTime.UtcNow.AddYears(42);
 
         _db.SaveChanges();
 

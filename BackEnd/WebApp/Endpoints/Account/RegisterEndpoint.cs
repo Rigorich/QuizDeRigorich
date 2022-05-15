@@ -2,10 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Data;
 using WebApp.Data.Models;
-using WebApp.Endpoints.Login;
 using WebApp.Helpers;
 
-namespace WebApp.Endpoints.Register;
+namespace WebApp.Endpoints.Account;
 
 [Route("/api")]
 public class RegisterEndpoint
@@ -13,7 +12,7 @@ public class RegisterEndpoint
     .WithRequest<LoginRequest>
     .WithActionResult
 {
-    private ApplicationDbContext _db { get; set; }
+    private readonly ApplicationDbContext _db;
 
     public RegisterEndpoint(ApplicationDbContext db)
     {

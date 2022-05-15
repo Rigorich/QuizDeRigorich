@@ -1,4 +1,4 @@
-﻿namespace WebApp.Endpoints.Login;
+﻿namespace WebApp.Endpoints.Account;
 
 public class LoginRequest
 {

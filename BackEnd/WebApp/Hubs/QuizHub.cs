@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 using WebApp.Data;
 using WebApp.Data.Models;
+using WebApp.Hubs.Models;
 
 namespace WebApp.Hubs;
 
 public class QuizHub : Hub<IQuizPlayer>
 {
-    private static readonly Dictionary<string, QuizInfo> Quizzes = new();
+    public static readonly Dictionary<string, QuizInfo> Quizzes = new();
 
     private readonly User? _user;
 
@@ -28,74 +29,102 @@ public class QuizHub : Hub<IQuizPlayer>
         }
     }
 
-    public async Task<string> CreateQuiz(int quizId)
+    #region Host
+
+    public async Task StartQuiz(string quizCode)
     {
-        if (_user is null) throw new ArgumentNullException("Not authorized");
+        if (_user is null) throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
+        if (_user.Nickname != Quizzes[quizCode].HostNickname) throw new HttpRequestException("Only host can do this", null, HttpStatusCode.Forbidden);
 
-        await using var db = await _dbContextFactory.CreateDbContextAsync();
+        if (Quizzes[quizCode].CurrentQuestion is not null) throw new HttpRequestException("Quiz already began", null, HttpStatusCode.BadRequest);
+        if (Quizzes[quizCode].Finished) throw new HttpRequestException("Quiz already finished", null, HttpStatusCode.BadRequest);
 
-        var quiz = await db.Quizzes
-            .Include(e => e.Questions).ThenInclude(e => e.Answers)
-            .SingleOrDefaultAsync(e => e.Id == quizId);
+        await Clients.Group(quizCode).AskForPlayersInfo();
+        await Clients.Group(quizCode).ReceiveStartQuiz();
 
-        if (quiz is null)
-            throw new ArgumentException("Quiz does not exist");
-
-        var code = Guid.NewGuid().ToString();
-
-        var info = new QuizInfo
-        {
-            QuizId = quizId,
-            Code = code,
-            HostNickname = _user!.Nickname,
-            NextQuestion = quiz.Questions.GetEnumerator(),
-        };
-
-        Quizzes.Add(code, info);
-
-        return code;
+        await PlayQuiz(quizCode);
     }
 
-    public async Task JoinQuiz(string quizCode)
+    #endregion
+
+    #region Player
+
+    public async Task<QuizPublicInfo> JoinQuiz(string quizCode)
     {
-        if (_user is null) throw new ArgumentNullException("Not authorized");
+        if (_user is null) throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
+        if (!Quizzes.ContainsKey(quizCode)) throw new HttpRequestException("Unknown quiz code", null, HttpStatusCode.BadRequest);
+
+        if (Quizzes[quizCode].Players.All(p => p.Id != _user.Id))
+        {
+            Quizzes[quizCode].Players.Add(new()
+            {
+                Id = _user.Id,
+                Nickname = _user.Nickname,
+            });
+        }
 
         await Groups.AddToGroupAsync(Context.ConnectionId, quizCode);
-        await Clients.Group(quizCode).ReceivePlayersList(Quizzes[quizCode].Players.Select(p => p.Name).ToList());
+        await Clients.Group(quizCode).AskForPlayersInfo();
+
+        var info = new QuizPublicInfo
+        {
+            QuizId = Quizzes[quizCode].QuizId,
+            Code = quizCode,
+            Title = Quizzes[quizCode].Title,
+            HostNickname = Quizzes[quizCode].HostNickname,
+            QuestionsCount = Quizzes[quizCode].Questions.Count,
+            Finished = Quizzes[quizCode].Finished,
+        };
+
+        return info;
     }
 
-    public Task QuitQuiz(string quizCode)
+    public async Task QuitQuiz(string quizCode)
     {
-        if (_user is null) throw new ArgumentNullException("Not authorized");
+        if (_user is null) throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
 
-        Clients.OthersInGroup(quizCode).ReceivePlayersList(Quizzes[quizCode].Players.Select(p => p.Name).ToList());
-        return Groups.RemoveFromGroupAsync(Context.ConnectionId, quizCode);
+        Quizzes[quizCode].Players.Remove(Quizzes[quizCode].Players.Single(p => p.Nickname == _user.Nickname));
+
+        await Clients.OthersInGroup(quizCode).AskForPlayersInfo();
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, quizCode);
     }
 
-    public Task StartQuiz(string quizCode, string[] players)
+    public void SendAnswer(string quizCode, PlayerAnswerInfo answer)
     {
-        if (_user is null) throw new ArgumentNullException("Not authorized");
-
-        return Clients.Group(quizCode).ReceiveStartQuiz();
     }
 
-    public Task NextQuestion(string quizCode)
+
+    #endregion
+
+    #region Helpers
+
+    private async Task PlayQuiz(string quizCode)
     {
-        if (_user is null) throw new ArgumentNullException("Not authorized");
+        await Task.Delay(TimeSpan.FromSeconds(3));
 
-        var question = Quizzes[quizCode].NextQuestion.Current;
+        foreach (var question in Quizzes[quizCode].Questions)
+        {
+            Quizzes[quizCode].CurrentQuestion = question;
 
-        if (question is null)
-            return FinishQuiz(quizCode);
+            await Clients.Group(quizCode).AskForQuestion();
 
-        return Clients.Group(quizCode).NextQuestion(question);
+            await Task.Delay(TimeSpan.FromSeconds(Quizzes[quizCode].CurrentQuestion!.TimeLimitInSeconds));
+
+            await Clients.Group(quizCode).SendAnswer();
+
+            await Task.Delay(TimeSpan.FromSeconds(1));
+        }
+
+        await FinishQuiz(quizCode);
     }
 
-    public async Task FinishQuiz(string quizCode)
+    private async Task FinishQuiz(string quizCode)
     {
-        if (_user is null) throw new ArgumentNullException("Not authorized");
+        Quizzes[quizCode].CurrentQuestion = null;
+        Quizzes[quizCode].Finished = true;
 
-        await Clients.Group(quizCode).ReceiveResults(Quizzes[quizCode].Players);
-        Quizzes.Remove(quizCode);
+        await Clients.Group(quizCode).ReceiveFinishQuiz();
     }
+
+    #endregion
 }
