@@ -5,7 +5,7 @@ module.exports = {
     entry: "./src/index.tsx",
     
     output: {
-        filename: "./dist/main.js",
+        filename: "../../BackEnd/WebApp/wwwroot/main.js",
     },
  
     resolve: {

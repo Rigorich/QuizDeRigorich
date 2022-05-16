@@ -11,10 +11,14 @@ export default function QuizResults({results}: Parameters) {
       <h1>
         Results
       </h1>
-      {results.map(p =>
-      <div key={p.id}>
-        {p.nickname} --- {p.answers.filter(a => a.isRight).length}
-      </div>)}
+      {results
+        .map(r => { return { id: r.id, nickname: r.nickname, answers: r.answers.filter(a => a.isRight).length }})
+        .sort((a, b) => a.answers - b.answers)
+        .map(r =>
+          <div key={r.id}>
+            {r.nickname} --- {r.answers}
+          </div>
+      )}
     </div>
   );
 }

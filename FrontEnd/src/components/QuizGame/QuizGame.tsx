@@ -61,15 +61,22 @@ export default function QuizGame() {
     }
   };
 
-  console.log(`Current answer outer: ${userAnswer}`);
+  //console.log(`Current answer render: ${JSON.stringify(userAnswer, null, 4)}`);
+  useEffect(() => {
+    //console.log(`Current answer effect: ${JSON.stringify(userAnswer, null, 4)}`);
+    if (userAnswer) {
+      API.SendAnswer(quizCode!, userAnswer);
+    }
+  }, [userAnswer]);
   
   async function SendAnswer() {
-    console.log(`SEND ANSWER! ${userAnswer}`)
+    //console.log(`Current answer send: ${JSON.stringify(userAnswer, null, 4)}`);
 
     if (userAnswer) {
       await API.SendAnswer(quizCode!, userAnswer);
-      setStatus(QuizStatus.QuestionResults);
     }
+    
+    setStatus(QuizStatus.QuestionResults);
   }
 
   useEffect(() => {
@@ -87,8 +94,6 @@ export default function QuizGame() {
     const question = await API.GetCurrentQuestion(quizCode!);
 
     if (question) {
-      //await SendAnswer();
-
       setCurrentQuestion(question);
       setUserAnswer({ questionId: question.id, selectedIds: [], answerText: '', isRight: null });
       setStatus(QuizStatus.QuestionIntro);

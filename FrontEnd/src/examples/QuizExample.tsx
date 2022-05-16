@@ -9,7 +9,7 @@ const QuizExample: Quiz = {
       id: 0,
       priority: null,
       type: QuestionType.Single,
-      timeLimitInSeconds: 5,
+      timeLimitInSeconds: 10,
       text: 'How many?',
       image: 'https://paperpaper.ru/wp-content/uploads/2020/12/bptkvkkkfgs.jpg',
       answers: [
@@ -43,7 +43,7 @@ const QuizExample: Quiz = {
       id: 0,
       priority: null,
       type: QuestionType.Multiple,
-      timeLimitInSeconds: 30,
+      timeLimitInSeconds: 10,
       text: 'What?',
       image: null,
       answers: [
@@ -71,7 +71,7 @@ const QuizExample: Quiz = {
       id: 0,
       priority: null,
       type: QuestionType.Open,
-      timeLimitInSeconds: 30,
+      timeLimitInSeconds: 10,
       text: 'Question?',
       image: null,
       answers: [

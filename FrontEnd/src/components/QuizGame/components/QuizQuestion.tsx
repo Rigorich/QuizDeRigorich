@@ -14,6 +14,7 @@ export default function QuizQuestion({question, userAnswer, setUserAnswer}: Para
   function onSingleAnswerSelect(answerId: number, newValue: boolean): void {
     const selectedIds = newValue ? [answerId] : [];
     setUserAnswer({...userAnswer, selectedIds: selectedIds});
+    //console.log(`Current answer changed: ${JSON.stringify(userAnswer, null, 4)}`);
   }
 
   function onMultipleAnswerSelect(answerId: number, newValue: boolean): void {
@@ -21,7 +22,6 @@ export default function QuizQuestion({question, userAnswer, setUserAnswer}: Para
     setUserAnswer({...userAnswer, selectedIds: selectedIds});
   }
 
-  console.log(`Current answer: ${userAnswer}`);
 
   return (
     <div>

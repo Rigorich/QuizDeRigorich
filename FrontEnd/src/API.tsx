@@ -78,7 +78,7 @@ const API = {
 
   async SendAnswer(quizCode: string, answer: UserAnswer): Promise<void> {
     return axios
-      .post(API.BaseUrl + `quiz/SendAnswer/${quizCode}`, { Answer: answer }, API.GetHeadersToken())
+      .post(API.BaseUrl + `quiz/SendAnswer`, { quizCode, answer }, API.GetHeadersToken())
   },
 }
 
