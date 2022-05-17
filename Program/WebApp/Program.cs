@@ -1,4 +1,6 @@
+using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using WebApp.Data;
 using WebApp.Hubs;
 
@@ -28,6 +30,14 @@ builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen();
 
+builder.Services
+    .AddFluentMigratorCore()
+    .ConfigureRunner(rb => rb
+        .AddSqlServer()
+        .WithGlobalConnectionString(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations());
+
+WebApp.Migrations.Runner.Run(builder.Services);
 
 var app = builder.Build();
 
@@ -60,12 +70,5 @@ app.UseEndpoints(opts =>
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
-var dbContextFactory = app.Services.GetService<IDbContextFactory<ApplicationDbContext>>();
-using (var db = dbContextFactory!.CreateDbContext())
-{
-    db.Database.EnsureDeleted();
-    db.Database.EnsureCreated();
-}
 
 app.Run();
