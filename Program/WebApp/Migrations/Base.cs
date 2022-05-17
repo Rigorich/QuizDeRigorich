@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
 
-namespace IAFCore.Persistence.Migrations;
+namespace WebApp.Migrations;
 
 [Migration(1)]
 public class BaseMigration : Migration
@@ -99,6 +99,7 @@ public class BaseMigration : Migration
 
         ");
     }
+
     public override void Down()
     {
         throw new NotImplementedException();
