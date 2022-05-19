@@ -1,22 +1,18 @@
 import { useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import API from './API';
-import './App.css';
 import LoginPage from './components/LoginPage';
 import MainPage from './components/MainPage';
 import QuizGame from './components/QuizGame/QuizGame';
+import './index.css';
 
 function App() {
 
   const [isSignedIn, setIsSignedIn] = useState<boolean>(localStorage.getItem('token') != null);
 
   return (
-    <div className="App">
-      <button 
-        onClick={async () => alert(await API.Test())}
-      >
-        Test
-      </button>
+    <main className="App">
+      <button style={{display: 'none'}} onClick={async () => alert(await API.Test())}>Test</button>
       <Routes>
         {isSignedIn
         ?
@@ -32,8 +28,7 @@ function App() {
         </>
         }
       </Routes>
-      
-    </div>
+    </main>
   );
 }
 

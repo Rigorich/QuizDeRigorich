@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import API from '../API';
 import QuizExample from '../examples/QuizExample';
 import Quiz from '../models/Quiz';
+import '../styles/MainPage.css';
 
 export default function MainPage() {
 
@@ -20,26 +21,30 @@ export default function MainPage() {
   }, []);
 
   return (
-    <>
-      {quizCode && <Navigate replace to={`/quiz/${quizCode}`} />}
-      <div>
-        <h2>Join quiz game</h2>
-        <input value={code} onChange={e => setCode(e.target.value)} />
-        <button onClick={() => setQuizCode(code)}>Play!</button>
+    <div className='MainPageContainer'>
+      {quizCode && <Navigate to={`/quiz/${quizCode}`} />}
+      <div className='MainPageJoinSubContainer'>
+        <div><h2>Join quiz game</h2></div>
+        <div><input className='TextInput' value={code} onChange={e => setCode(e.target.value)} /></div>
+        <div><button className='TextButton MainPagePlayButton' onClick={() => setQuizCode(code)}>Play!</button></div>
       </div>
-      <div>
+      <div className='MainPageQuizzesSubContainer'>
         <h2>My quizzes</h2>
+        <div className='MainPageQuizList'>
         {quizzes
           ? quizzes.map(q =>
-            <div key={q.id}>
-              <p>{q.title}</p>
-              <button onClick={async () => { const quizCode = await API.CreateQuizGame(q.id); setQuizCode(quizCode); }}>▶️️</button>
-              <button onClick={() => console.log(`Edit ${q.id}`)}>✏️</button>
-              <button onClick={async () => { await API.DeleteQuiz(q.id); await ReloadQuizzes() }}>❌️</button>
+            <div className='MainPageQuizRow' key={q.id}>
+              <p className='MainPageQuizName'>{q.title}</p>
+              <div className='MainPageActionButtonsRow'>
+                <button className='MainPageActionButton' onClick={async () => { const quizCode = await API.CreateQuizGame(q.id); setQuizCode(quizCode); }}>▶️️</button>
+                <button className='MainPageActionButton' onClick={() => console.log(`Edit ${q.id}`)}>✏️</button>
+                <button className='MainPageActionButton' onClick={async () => { await API.DeleteQuiz(q.id); await ReloadQuizzes() }}>❌️</button>
+              </div>
             </div>)
           : 'Please stand by...'}
-        <button onClick={() => API.CreateQuiz(QuizExample)}>Create new quiz</button>
+        </div>
+        <button className='TextButton MainPageCreateButton' onClick={() => API.CreateQuiz(QuizExample)}>Create new quiz</button>
       </div>
-    </>
+    </div>
   );
 }

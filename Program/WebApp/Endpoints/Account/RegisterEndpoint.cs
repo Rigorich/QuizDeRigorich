@@ -22,6 +22,9 @@ public class RegisterEndpoint
     [HttpPost("Register")]
     public override ActionResult Handle([FromBody] LoginRequest request)
     {
+        if (request.Nickname.Any(char.IsWhiteSpace) || request.Nickname.Length < 3)
+            return BadRequest($"Bad nickname");
+
         var notUniqueNickname = _db.Set<User>()
             .Any(u => u.Nickname == request.Nickname);
 
