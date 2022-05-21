@@ -37,9 +37,10 @@ const API = {
       .then(r => r.data)
   },
 
-  async CreateQuiz(quiz: Quiz): Promise<void> {
+  async CreateQuiz(): Promise<number> {
     return axios
-      .post(API.BaseUrl + `api/CreateQuiz`, quiz, API.GetHeadersToken())
+      .post<number>(API.BaseUrl + `api/CreateQuiz`, {}, API.GetHeadersToken())
+      .then(r => r.data)
   },
 
   async GetQuiz(id: number): Promise<Quiz> {

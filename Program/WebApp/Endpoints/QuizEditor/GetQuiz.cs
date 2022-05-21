@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
 
 namespace WebApp.Endpoints.QuizEditor;
@@ -8,19 +9,21 @@ namespace WebApp.Endpoints.QuizEditor;
 public class GetQuiz
     : EndpointBaseSync
     .WithRequest<int>
-    .WithResult<Data.DTOs.Quiz>
+    .WithActionResult<Data.DTOs.Quiz>
 {
-    private readonly ApplicationDbContext _db;
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
 
-    public GetQuiz(ApplicationDbContext db)
+    public GetQuiz(IDbContextFactory<ApplicationDbContext> dbContextFactory)
     {
-        _db = db;
+        _dbContextFactory = dbContextFactory;
     }
 
     [HttpPost("GetQuiz/{id}")]
-    public override Data.DTOs.Quiz Handle([FromRoute] int id)
+    public override ActionResult<Data.DTOs.Quiz> Handle([FromRoute] int id)
     {
-        var quiz = _db.Quizzes
+        using var db = _dbContextFactory.CreateDbContext();
+
+        var quiz = db.Quizzes
             .Where(q => q.Id == id)
             .Select(quiz => new Data.DTOs.Quiz
             {

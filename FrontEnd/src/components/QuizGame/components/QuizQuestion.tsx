@@ -2,6 +2,7 @@ import Question from '../../../models/Question';
 import UserAnswer from '../../../models/UserAnswer';
 import { QuestionType } from '../../../models/QuestionType';
 import SelectableAnswer from './Answers/SelectableAnswer';
+import '../../../styles/QuizQuestion.css';
 
 interface Parameters {
   question: Question,
@@ -24,30 +25,20 @@ export default function QuizQuestion({question, userAnswer, setUserAnswer}: Para
 
 
   return (
-    <div>
-      <div>
-        { question.text
-          ? <p>{question.text}</p>
-          : <p>Quiz de Rigorich</p>
-        }
+    <div className='QuizQuestionContainer'>
+      <div className='QuizQuestionTitleDiv'>
+        <h1 className='QuizQuestionTitle'>{question.text || 'Quiz de Rigorich'}</h1>
       </div>
-      <div style={{
-        width: '100%',
-        height: 10,
-        backgroundColor: 'red',
-        animation: `width ${question.timeLimitInSeconds}s linear`,
-      }}>
+      <div className='QuizQuestionTimer'
+        style={{ animation: `width ${question.timeLimitInSeconds}s linear` }}>
       </div>
-      <div>
-        { question.image
-          ? <img src={question.image} />
-          : <img src={'https://media.moddb.com/images/mods/1/17/16158/14.jpg'} />
-        }
+      <div className='QuizQuestionImageDiv'>
+        <img className='QuizQuestionImage' src={question.image || 'https://media.moddb.com/images/mods/1/17/16158/14.jpg'} />
       </div>
-      <div>
+      <div className='QuizQuestionAnswers'>
         { question.type === QuestionType.Single &&
           question.answers.map(a => 
-            <SelectableAnswer  
+            <SelectableAnswer
               key={a.id}
               answer={a}
               isSelected={() => userAnswer.selectedIds.includes(a.id)}

@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using WebApp.Data;
 
@@ -11,34 +12,36 @@ public class UpdateQuiz
     .WithRequest<Data.DTOs.Quiz>
     .WithActionResult
 {
-    private readonly ApplicationDbContext _db;
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UpdateQuiz(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
+    public UpdateQuiz(IDbContextFactory<ApplicationDbContext> dbContextFactory, IHttpContextAccessor httpContextAccessor)
     {
-        _db = db;
+        _dbContextFactory = dbContextFactory;
         _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpPost("UpdateQuiz")]
     public override ActionResult Handle([FromBody] Data.DTOs.Quiz quizDTO)
     {
+        using var db = _dbContextFactory.CreateDbContext();
+
         var tokenString = _httpContextAccessor.HttpContext?.Request.Headers["token"].SingleOrDefault();
-        if (!Guid.TryParse(tokenString, out var token) || !_db.Users.Any(u => u.Token == token))
-            throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
+        if (!Guid.TryParse(tokenString, out var token) || !db.Users.Any(u => u.Token == token))
+            return Unauthorized("Unauthorized");
 
-        var quizOwnerId = _db.Quizzes.SingleOrDefault(q => q.Id == quizDTO.Id)?.UserId;
-        if (quizOwnerId is null)
-            throw new HttpRequestException("Unknown quiz id", null, HttpStatusCode.BadRequest);
-        if (quizOwnerId != _db.Users.Single(u => u.Token == token).Id)
-            throw new HttpRequestException("You must be owner of quiz", null, HttpStatusCode.Forbidden);
+        var quiz = db.Quizzes
+            .Include(q => q.Questions).ThenInclude(q => q.Answers)
+            .SingleOrDefault(q => q.Id == quizDTO.Id);
+        if (quiz is null)
+            return BadRequest("Unknown quiz id");
 
-        var quiz = new Data.Models.Quiz
-        {
-            Id = quizDTO.Id,
-            Title = quizDTO.Title,
-            UserId = quizOwnerId.Value,
-            Questions = quizDTO.Questions.Select((question, index) => new Data.Models.Question
+        if (quiz.UserId != db.Users.Single(u => u.Token == token).Id)
+            return Unauthorized("You must be owner of quiz");
+
+        quiz.Title = quizDTO.Title;
+        quiz.Questions = quizDTO.Questions
+            .Select((question, index) => new Data.Models.Question
             {
                 Id = question.Id,
                 Type = question.Type,
@@ -56,11 +59,9 @@ public class UpdateQuiz
                 })
                 .ToList(),
             })
-            .ToList(),
-        };
+            .ToList();
 
-        _db.Quizzes.Update(quiz);
-        _db.SaveChanges();
+        db.SaveChanges();
 
         return Ok();
     }

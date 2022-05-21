@@ -9,11 +9,11 @@ namespace WebApp.Endpoints.QuizGame;
 public class GetPlayersInfo
     : EndpointBaseSync
     .WithRequest<string>
-    .WithResult<List<PlayerInfo>>
+    .WithActionResult<PlayerInfo[]>
 {
     [HttpPost("GetPlayersInfo/{quizCode}")]
-    public override List<PlayerInfo> Handle([FromRoute] string quizCode)
+    public override ActionResult<PlayerInfo[]> Handle([FromRoute] string quizCode)
     {
-        return QuizHub.Quizzes[quizCode].Players;
+        return QuizHub.Quizzes[quizCode].Players.ToArray();
     }
 }

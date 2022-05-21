@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using WebApp.Data;
 
@@ -9,27 +10,29 @@ namespace WebApp.Endpoints.QuizEditor;
 public class GetAllQuizzes
     : EndpointBaseSync
     .WithoutRequest
-    .WithResult<Data.DTOs.Quiz[]>
+    .WithActionResult<Data.DTOs.Quiz[]>
 {
-    private readonly ApplicationDbContext _db;
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetAllQuizzes(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
+    public GetAllQuizzes(IDbContextFactory<ApplicationDbContext> dbContextFactory, IHttpContextAccessor httpContextAccessor)
     {
-        _db = db;
+        _dbContextFactory = dbContextFactory;
         _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpPost("GetAllQuizzes")]
-    public override Data.DTOs.Quiz[] Handle()
+    public override ActionResult<Data.DTOs.Quiz[]> Handle()
     {
+        using var db = _dbContextFactory.CreateDbContext();
+
         var tokenString = _httpContextAccessor.HttpContext?.Request.Headers["token"].SingleOrDefault();
-        if (!Guid.TryParse(tokenString, out var token) || !_db.Users.Any(u => u.Token == token))
-            throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
+        if (!Guid.TryParse(tokenString, out var token) || !db.Users.Any(u => u.Token == token))
+            return Unauthorized("Unauthorized");
 
-        var userId = _db.Users.Single(u => u.Token == token).Id;
+        var userId = db.Users.Single(u => u.Token == token).Id;
 
-        return _db.Quizzes
+        return db.Quizzes
             .Where(quiz => quiz.UserId == userId)
             .Select(quiz => new Data.DTOs.Quiz
             {

@@ -1,6 +1,6 @@
 export default interface Answer {
   id: number,
-  text: string | null,
-  image: string | null,
+  priority: number | null,
+  text: string,
   isRight: boolean,
 }

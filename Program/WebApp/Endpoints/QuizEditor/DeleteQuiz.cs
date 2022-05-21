@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using WebApp.Data;
 
@@ -11,30 +12,32 @@ public class DeleteQuiz
     .WithRequest<int>
     .WithActionResult
 {
-    private readonly ApplicationDbContext _db;
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public DeleteQuiz(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
+    public DeleteQuiz(IDbContextFactory<ApplicationDbContext> dbContextFactory, IHttpContextAccessor httpContextAccessor)
     {
-        _db = db;
+        _dbContextFactory = dbContextFactory;
         _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpPost("DeleteQuiz/{id}")]
     public override ActionResult Handle([FromRoute] int id)
     {
+        using var db = _dbContextFactory.CreateDbContext();
+
         var tokenString = _httpContextAccessor.HttpContext?.Request.Headers["token"].SingleOrDefault();
-        if (!Guid.TryParse(tokenString, out var token) || !_db.Users.Any(u => u.Token == token))
-            throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
+        if (!Guid.TryParse(tokenString, out var token) || !db.Users.Any(u => u.Token == token))
+            return Unauthorized("Unauthorized");
 
-        var quizOwnerId = _db.Quizzes.SingleOrDefault(q => q.Id == id)?.UserId;
+        var quizOwnerId = db.Quizzes.SingleOrDefault(q => q.Id == id)?.UserId;
         if (quizOwnerId is null)
-            throw new HttpRequestException("Unknown quiz id", null, HttpStatusCode.BadRequest);
-        if (quizOwnerId != _db.Users.Single(u => u.Token == token).Id)
-            throw new HttpRequestException("You must be owner of quiz", null, HttpStatusCode.Forbidden);
+            return BadRequest("Unknown quiz id");
+        if (quizOwnerId != db.Users.Single(u => u.Token == token).Id)
+            return Unauthorized("You must be owner of quiz");
 
-        _db.Quizzes.Remove(_db.Quizzes.Single(q => q.Id == id));
-        _db.SaveChanges();
+        db.Quizzes.Remove(db.Quizzes.Single(q => q.Id == id));
+        db.SaveChanges();
 
         return Ok();
     }

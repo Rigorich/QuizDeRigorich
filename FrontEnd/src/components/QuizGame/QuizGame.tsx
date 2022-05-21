@@ -6,16 +6,17 @@ import QuizQuestion from './components/QuizQuestion';
 import UserAnswer from '../../models/UserAnswer';
 import PlayerInfo from '../../models/PlayerInfo';
 import { QuizStatus } from './QuizStatus';
-import QuizIntro from './components/QuizIntro';
 import QuizInfo from '../../models/QuizInfo';
 import QuizResults from './components/QuizResults';
 import { Navigate, useParams } from 'react-router-dom';
 import QuestionResults from './components/QuestionResults';
+import QuizWaitingRoom from './components/QuizWaitingRoom';
+import SimpleInfoPage from '../SimpleInfoPage';
 
 export default function QuizGame() {
 
   const { quizCode } = useParams<{quizCode: string}>();
-  if (quizCode == undefined)
+  if (quizCode === undefined)
     throw 'THE HELL?'
 
   const [connection, _setConnection] = useState<signalR.HubConnection>(
@@ -116,42 +117,28 @@ export default function QuizGame() {
   useEffect(() => {console.log(`Status = ${status}`);}, [status]);
 
   return (
-      <div>
+      <>
         { status === QuizStatus.RedirectToMenu &&
-        <Navigate replace to='/' />
+          <Navigate to='/' />
         }
         { status === QuizStatus.Undefined &&
-        <h1>Please stand by</h1> 
+          <SimpleInfoPage text={'Please stand by...'} />
         }
         { status === QuizStatus.Waiting &&
           quizInfo &&
-        <>
-          <h1>Quiz de Rigorich</h1>
-          <h2>{quizInfo.title}</h2>
-          <h2>{quizInfo.code}</h2>
-          <h2>{quizInfo.hostNickname}</h2>
-          <h3>Players:</h3>
-          {results == null
-          ? <p>Please stand by...</p>
-          : results.map(p => <p key={p.id}>{p.nickname}</p>)}
-          { quizInfo.hostNickname === API.GetNickname() &&
-          <button onClick={async () => await connection.invoke('StartQuiz', quizCode)}>
-            Start!
-          </button>}
-        </>
+          <QuizWaitingRoom
+            quiz={quizInfo}
+            players={results}
+            start={async () => await connection.invoke('StartQuiz', quizCode)}
+          />
         }
         { status === QuizStatus.QuizIntro &&
-        <>
-          <h1>{quizInfo!.title}</h1> 
-          <h2>Quiz begins in 3... 2... 1...</h2> 
-        </>
+          <SimpleInfoPage text={'Quiz begins in 3... 2... 1...'} />
         }
         { status === QuizStatus.QuestionIntro &&
           quizInfo && currentQuestion &&
-          <QuizIntro
-            quiz={quizInfo}
-            question={currentQuestion}
-          />}
+          <SimpleInfoPage text={`Question ${currentQuestion.priority} out of ${quizInfo.questionsCount}`} />
+        }
         { status === QuizStatus.QuestionAnswering &&
           currentQuestion && userAnswer &&
           <QuizQuestion
@@ -169,6 +156,6 @@ export default function QuizGame() {
           <QuizResults
             results={results}
           />}
-      </div>
+      </>
   );
 }

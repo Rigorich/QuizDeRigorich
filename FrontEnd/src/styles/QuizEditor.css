@@ -1,0 +1,61 @@
+.QuizEditorContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: inherit;
+}
+
+.QuizEditorHeader {
+  width: 100%;
+  height: 80px;
+  border: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.QuizEditorSaveButton {
+  width: 120px;
+  height: 50px;
+}
+
+.QuizEditorQuestionEditor {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
+
+.QuizEditorFooter {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  overflow-x: scroll;
+  background-color: #EEEEEE;
+}
+
+.QuizEditorFooterInner {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.QuizEditorFooterItem {
+  height: 80px;
+  width: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.QuizEditorFooterNewQuestionButton {
+  width: 40px;
+  height: 40px;
+  font-size: 30px;
+}

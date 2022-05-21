@@ -25,9 +25,9 @@ export default function LoginPage({onSuccessLogin}: Parameters) {
 
   return (
     <div className='LoginPageContainer'>
-      <header className='LoginPageHeader'>
+      <div className='LoginPageHeader'>
         <h1>Please, log in to proceed</h1>
-      </header>
+      </div>
       <div className='LoginPageContainer'>
         <div className='LoginPageLoginInputBox'>
           <input className='TextInput' placeholder='Nickname' value={login} onChange={e => setLogin(e.target.value)} />

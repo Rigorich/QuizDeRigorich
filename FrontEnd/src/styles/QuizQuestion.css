@@ -1,0 +1,95 @@
+.QuizQuestionContainer {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: white;
+}
+
+.QuizQuestionTitleDiv {
+  height: 12.5vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #EEEEEE;
+}
+
+.QuizQuestionTitle {
+  font-size: 4vh;
+}
+
+.QuizQuestionTimer {
+  width: 100%;
+  height: 1vh;
+  background-color: red;
+}
+
+.QuizQuestionImageDiv {
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.QuizQuestionImage {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.QuizQuestionAnswers {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  flex-direction: row;
+  align-items: center;
+}
+
+.QuizQuestionAnswer {
+  width: 50%;
+  height: 18vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.QuizQuestionAnswerInner {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.QuizQuestionAnswerText {
+  padding: 3vh;
+  font-size: 3vh;
+  text-align: left;
+  color: white;
+  text-shadow: 0.15vh 0.15vh 0.3vh black;
+}
+
+.QuizQuestionAnswerSelect {
+  min-width: 4vh;
+  min-height: 4vh;
+  width: 4vh;
+  height: 4vh;
+  margin: 2vh;
+  border-width: 0.4vh;
+  border-color: black;
+  border-style: solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.QuizQuestionAnswerSelectMark {
+  font-size: 4vh;
+  user-select: none;
+}

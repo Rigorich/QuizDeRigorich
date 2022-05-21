@@ -1,4 +1,6 @@
 import Answer from '../../../../models/Answer';
+import '../../../../styles/QuizQuestion.css';
+import SelectableAnswerCheckbox from './SelectableAnswerCheckbox';
 
 interface Parameters {
   answer: Answer,
@@ -8,19 +10,23 @@ interface Parameters {
 
 export default function SelectableAnswer({answer, isSelected, setIsSelected}: Parameters) {
 
+  const color = answer.priority === 1 ? '#33CC33' :
+                answer.priority === 2 ? '#5555CC' :
+                answer.priority === 3 ? '#DD77DD' :
+                answer.priority === 4 ? '#DDDD11' :
+                '#CCCCCC';
+
   return (
-      <div>
-        { answer.text &&
-          <p>{answer.text}</p>
-        }
-        { answer.image &&
-          <img src={answer.image} />
-        }
-        <input
-          type="checkbox"
-          checked={isSelected()}
-          onChange={event => setIsSelected(event.target.checked)}
-        />
+      <div className='QuizQuestionAnswer'>
+        <div className='QuizQuestionAnswerInner' style={{backgroundColor: color}}>
+          { answer.text &&
+            <p className='QuizQuestionAnswerText'>{answer.text}</p>
+          }
+          <SelectableAnswerCheckbox
+            checked={isSelected()}
+            onClick={() => setIsSelected(!isSelected())}
+          />
+        </div>
       </div>
   );
 }

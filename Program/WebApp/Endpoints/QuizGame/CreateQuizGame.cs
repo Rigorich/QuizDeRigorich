@@ -12,30 +12,32 @@ namespace WebApp.Endpoints.QuizGame;
 public class CreateQuizGame
     : EndpointBaseSync
     .WithRequest<int>
-    .WithResult<string>
+    .WithActionResult<string>
 {
-    private readonly ApplicationDbContext _db;
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CreateQuizGame(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
+    public CreateQuizGame(IDbContextFactory<ApplicationDbContext> dbContextFactory, IHttpContextAccessor httpContextAccessor)
     {
-        _db = db;
+        _dbContextFactory = dbContextFactory;
         _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpPost("CreateQuizGame/{quizId}")]
-    public override string Handle([FromRoute] int quizId)
+    public override ActionResult<string> Handle([FromRoute] int quizId)
     {
-        var tokenString = _httpContextAccessor.HttpContext?.Request.Headers["token"].SingleOrDefault();
-        if (!Guid.TryParse(tokenString, out var token) || !_db.Users.Any(u => u.Token == token))
-            throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
+        using var db = _dbContextFactory.CreateDbContext();
 
-        var quiz = _db.Quizzes
+        var tokenString = _httpContextAccessor.HttpContext?.Request.Headers["token"].SingleOrDefault();
+        if (!Guid.TryParse(tokenString, out var token) || !db.Users.Any(u => u.Token == token))
+            return Unauthorized("Unauthorized");
+
+        var quiz = db.Quizzes
             .Include(e => e.Questions).ThenInclude(e => e.Answers)
             .SingleOrDefault(e => e.Id == quizId);
 
         if (quiz is null)
-            throw new HttpRequestException("Quiz does not exist", null, HttpStatusCode.BadRequest);
+            return BadRequest("Quiz does not exist");
 
         string code;
         do
@@ -49,7 +51,7 @@ public class CreateQuizGame
             QuizId = quizId,
             Code = code,
             Title = quiz.Title,
-            HostNickname = _db.Users.Single(u => u.Token == token).Nickname,
+            HostNickname = db.Users.Single(u => u.Token == token).Nickname,
             Questions = quiz.Questions,
         };
 

@@ -3,6 +3,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import API from './API';
 import LoginPage from './components/LoginPage';
 import MainPage from './components/MainPage';
+import QuizEditorPage from './components/QuizEditor/QuizEditorPage';
 import QuizGame from './components/QuizGame/QuizGame';
 import './index.css';
 
@@ -19,6 +20,7 @@ function App() {
         <>
           <Route path='/' element={<MainPage />} />
           <Route path='/quiz/:quizCode' element={<QuizGame />} />
+          <Route path='/editor/:quizIdString' element={<QuizEditorPage />} />
           <Route path="*" element={<Navigate replace to='/' />} />
         </>
         :

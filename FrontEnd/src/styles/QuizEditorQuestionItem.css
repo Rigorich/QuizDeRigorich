@@ -1,0 +1,66 @@
+.QuizEditorQuestionItem {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.QuizEditorQuestionItemFirstRow {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.QuizEditorQuestionItemMoveButton {
+  height: 20px;
+  width: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  border-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.QuizEditorQuestionItemInfo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.QuizEditorQuestionItemInfoImageDiv {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.QuizEditorQuestionItemInfoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.QuizEditorQuestionItemInfoTitle {
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.QuizEditorQuestionItemSecondRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.QuizEditorQuestionItemActionButton {
+  font-size: 15px;
+}

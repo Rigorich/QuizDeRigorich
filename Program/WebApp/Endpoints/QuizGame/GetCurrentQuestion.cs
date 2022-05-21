@@ -9,10 +9,10 @@ namespace WebApp.Endpoints.QuizGame;
 public class GetCurrentQuestion
     : EndpointBaseSync
     .WithRequest<string>
-    .WithResult<QuestionInfo?>
+    .WithActionResult<QuestionInfo?>
 {
     [HttpPost("GetCurrentQuestion/{quizCode}")]
-    public override QuestionInfo? Handle([FromRoute] string quizCode)
+    public override ActionResult<QuestionInfo?> Handle([FromRoute] string quizCode)
     {
         var question = QuizHub.Quizzes[quizCode].CurrentQuestion;
 
@@ -27,11 +27,12 @@ public class GetCurrentQuestion
             TimeLimitInSeconds = question.TimeLimitInSeconds,
             Text = question.Text,
             Image = question.Image,
-            Answers = question.Answers.Select(a => new AnswerInfo
+            Answers = question.Answers.Select((answer, index) => new AnswerInfo
             {
-                Id = a.Id,
-                Text = a.Text,
-                Image = a.Image,
+                Id = answer.Id,
+                Priority = index + 1,
+                Text = answer.Text,
+                Image = answer.Image,
             })
             .ToList(),
         };

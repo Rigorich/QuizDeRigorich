@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using WebApp.Data;
 using WebApp.Data.Models;
@@ -13,21 +14,23 @@ public class SendAnswer
     .WithRequest<SendAnswerRequest>
     .WithActionResult
 {
-    private readonly ApplicationDbContext _db;
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public SendAnswer(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
+    public SendAnswer(IDbContextFactory<ApplicationDbContext> dbContextFactory, IHttpContextAccessor httpContextAccessor)
     {
-        _db = db;
+        _dbContextFactory = dbContextFactory;
         _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpPost("SendAnswer")]
     public override ActionResult Handle(SendAnswerRequest request)
     {
+        using var db = _dbContextFactory.CreateDbContext();
+
         var tokenString = _httpContextAccessor.HttpContext?.Request.Headers["token"].SingleOrDefault();
-        if (!Guid.TryParse(tokenString, out var token) || !_db.Users.Any(u => u.Token == token))
-            throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
+        if (!Guid.TryParse(tokenString, out var token) || !db.Users.Any(u => u.Token == token))
+            return Unauthorized("Unauthorized");
 
         var answer = request.Answer;
         var quiz = QuizHub.Quizzes[request.QuizCode];
@@ -43,7 +46,7 @@ public class SendAnswer
             _ => throw new ArgumentOutOfRangeException(),
         };
 
-        var answers = quiz.Players.Single(p => p.Nickname == _db.Users.Single(u => u.Token == token).Nickname).Answers;
+        var answers = quiz.Players.Single(p => p.Nickname == db.Users.Single(u => u.Token == token).Nickname).Answers;
 
         if (answers.Any(a => a.QuestionId == answer.QuestionId))
             answers.Remove(answers.Single(a => a.QuestionId == answer.QuestionId));
