@@ -52,7 +52,7 @@ public class CreateQuizGame
             Code = code,
             Title = quiz.Title,
             HostNickname = db.Users.Single(u => u.Token == token).Nickname,
-            Questions = quiz.Questions,
+            Questions = quiz.Questions.OrderBy(q => q.Priority).ToList(),
         };
 
         QuizHub.Quizzes.Add(code, info);

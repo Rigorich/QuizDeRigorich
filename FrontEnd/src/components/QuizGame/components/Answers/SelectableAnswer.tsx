@@ -19,9 +19,7 @@ export default function SelectableAnswer({answer, isSelected, setIsSelected}: Pa
   return (
       <div className='QuizQuestionAnswer'>
         <div className='QuizQuestionAnswerInner' style={{backgroundColor: color}}>
-          { answer.text &&
-            <p className='QuizQuestionAnswerText'>{answer.text}</p>
-          }
+          <p className='QuizQuestionAnswerText'>{answer.text}</p>
           <SelectableAnswerCheckbox
             checked={isSelected()}
             onClick={() => setIsSelected(!isSelected())}

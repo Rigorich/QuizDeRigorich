@@ -33,7 +33,11 @@ export default function QuizQuestion({question, userAnswer, setUserAnswer}: Para
         style={{ animation: `width ${question.timeLimitInSeconds}s linear` }}>
       </div>
       <div className='QuizQuestionImageDiv'>
-        <img className='QuizQuestionImage' src={question.image || 'https://media.moddb.com/images/mods/1/17/16158/14.jpg'} />
+        <img
+          className='QuizQuestionImage'
+          src={question.image || 'https://i.ibb.co/9nh8nKQ/image.jpg'}
+          alt='Question'
+        />
       </div>
       <div className='QuizQuestionAnswers'>
         { question.type === QuestionType.Single &&

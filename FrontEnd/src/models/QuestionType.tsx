@@ -1,5 +1,5 @@
 export enum QuestionType {
-  Single = 1,
-  Multiple = 2,
-  Open = 3,
+  Single = 'Single',
+  Multiple = 'Multiple',
+  Open = 'Open',
 }

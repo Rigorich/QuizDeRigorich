@@ -24,6 +24,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: inherit;
+  cursor: pointer;
+}
+
+.QuizEditorQuestionItemMoveButton:disabled {
+  cursor: not-allowed;
 }
 
 .QuizEditorQuestionItemInfo {
@@ -50,9 +56,9 @@
 
 .QuizEditorQuestionItemInfoTitle {
   font-size: 10px;
-  white-space: nowrap;
+  max-height: 50px;
   overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .QuizEditorQuestionItemSecondRow {
@@ -63,4 +69,5 @@
 
 .QuizEditorQuestionItemActionButton {
   font-size: 15px;
+  background-color: inherit;
 }

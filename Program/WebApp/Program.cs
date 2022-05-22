@@ -1,5 +1,6 @@
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
 using System.Reflection;
 using WebApp.Data;
 using WebApp.Hubs;
@@ -26,7 +27,12 @@ builder.Services.AddSignalR();
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(opts =>
+    {
+        opts.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+        opts.SerializerSettings.Converters.Add(new StringEnumConverter());
+    });
 
 builder.Services.AddSwaggerGen();
 

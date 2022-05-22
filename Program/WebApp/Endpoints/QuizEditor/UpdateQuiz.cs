@@ -48,16 +48,17 @@ public class UpdateQuiz
                 Priority = index + 1,
                 TimeLimitInSeconds = question.TimeLimitInSeconds,
                 Text = question.Text,
-                Image = question.Image,
-                Answers = question.Answers.Select((answer, index) => new Data.Models.Answer
-                {
-                    Id = answer.Id,
-                    Priority = index + 1,
-                    Text = answer.Text,
-                    Image = answer.Image,
-                    IsRight = answer.IsRight,
-                })
-                .ToList(),
+                Image = string.IsNullOrWhiteSpace(question.Image) ? null : question.Image,
+                Answers = question.Answers
+                    .Select((answer, index) => new Data.Models.Answer
+                    {
+                        Id = answer.Id,
+                        Priority = index + 1,
+                        Text = answer.Text,
+                        Image = answer.Image,
+                        IsRight = answer.IsRight,
+                    })
+                    .ToList(),
             })
             .ToList();
 

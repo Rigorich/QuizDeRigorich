@@ -18,7 +18,9 @@
 }
 
 .QuizQuestionTitle {
+  max-height: 100%;
   font-size: 4vh;
+  overflow-y: auto;
 }
 
 .QuizQuestionTimer {
@@ -76,20 +78,20 @@
 }
 
 .QuizQuestionAnswerSelect {
-  min-width: 4vh;
-  min-height: 4vh;
-  width: 4vh;
-  height: 4vh;
-  margin: 2vh;
-  border-width: 0.4vh;
-  border-color: black;
-  border-style: solid;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    min-width: 4vh;
+    min-height: 4vh;
+    width: 4vh;
+    height: 4vh;
+    margin: 2vh;
+    border-width: 0.4vh;
+    border-color: black;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .QuizQuestionAnswerSelectMark {
-  font-size: 4vh;
-  user-select: none;
+    font-size: 4vh;
+    user-select: none;
 }

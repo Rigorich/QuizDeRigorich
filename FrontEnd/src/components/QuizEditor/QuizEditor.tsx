@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import API from '../../API';
 import Question from '../../models/Question';
-import { QuestionType } from '../../models/QuestionType';
 import Quiz from '../../models/Quiz';
-import QuizEditorQuestionItem from './QuizEditorQuestionItem';
-import '../../styles/QuizEditor.css';
 import { useNavigate } from 'react-router-dom';
+import QuizEditorFooter from './QuizEditorFooter';
+import QuizEditorQuestion from './QuizEditorQuestion';
+import '../../styles/QuizEditor.css';
 
 interface Parameters {
   quiz: Quiz,
@@ -20,30 +20,15 @@ export default function QuizEditor({quiz, setQuiz}: Parameters) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setQuestion(quiz.questions[questionIndex])
+    setQuestion(quiz.questions[questionIndex]);
   }, [questionIndex]);
 
   useEffect(() => {
     if (question && quiz.questions[questionIndex]) {
       quiz.questions[questionIndex] = question;
-      setQuiz({...quiz});
+      setQuiz(JSON.parse(JSON.stringify(quiz)));
     }
   }, [question]);
-
-  function AddNewQuestion() {
-    quiz.questions.push({
-      id: 0,
-      priority: null,
-      type: QuestionType.Single,
-      timeLimitInSeconds: 10,
-      text: 'Question?',
-      image: null,
-      answers: [],
-    });
-    const clone = JSON.parse(JSON.stringify(quiz));
-    setQuiz(clone);
-    setQuestionIndex(quiz.questions.length - 1);
-  }
 
   return (
       <div className='QuizEditorContainer'>
@@ -53,7 +38,8 @@ export default function QuizEditor({quiz, setQuiz}: Parameters) {
             className='TextInput'
             placeholder='Enter quiz title'
             value={quiz.title}
-            onChange={e => setQuiz({...quiz, title: e.target.value})} />
+            onChange={e => setQuiz({...quiz, title: e.target.value})}
+          />
           <button
             className='TextButton QuizEditorSaveButton'
             onClick={() => API.UpdateQuiz(quiz)
@@ -63,31 +49,18 @@ export default function QuizEditor({quiz, setQuiz}: Parameters) {
             Save
           </button>
         </div>
-        <div className='QuizEditorQuestionEditor'>
-              
-        </div>
-        <div className='QuizEditorFooter'>
-          <div className='QuizEditorFooterInner'>
-            {quiz.questions.map((q, index) =>
-              <div className='QuizEditorFooterItem' key={q.id || Math.random()}>
-                <QuizEditorQuestionItem
-                  quiz={quiz}
-                  setQuiz={setQuiz}
-                  index={index}
-                  setQuestionIndex={setQuestionIndex}
-                />
-              </div>
-            )}
-            <div className='QuizEditorFooterItem'>
-              <button 
-                className='TextButton QuizEditorFooterNewQuestionButton'
-                onClick={AddNewQuestion}
-              >
-                +
-              </button>
-            </div>
-          </div>
-        </div>
+        { question &&
+          <QuizEditorQuestion
+            question={question}
+            setQuestion={setQuestion}
+          />
+        }
+        <QuizEditorFooter
+          quiz={quiz}
+          setQuiz={setQuiz}
+          questionIndex={questionIndex}
+          setQuestionIndex={setQuestionIndex}
+        />
       </div>
   );
 }
