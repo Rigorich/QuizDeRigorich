@@ -3,7 +3,7 @@ interface Parameters {
   onClick: () => void,
 }
 
-export default function SelectableAnswerCheckbox({checked, onClick}: Parameters) {
+export default function QuizEditorQuestionAnswerCheckbox({checked, onClick}: Parameters) {
 
   return (
       <div className='QuizEditorQuestionAnswerSelect' onClick={onClick}>

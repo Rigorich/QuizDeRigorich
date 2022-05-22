@@ -50,6 +50,7 @@ public class UpdateQuiz
                 Text = question.Text,
                 Image = string.IsNullOrWhiteSpace(question.Image) ? null : question.Image,
                 Answers = question.Answers
+                    .Where(answer => !string.IsNullOrWhiteSpace(answer.Text)) // oh boy what a crutch!
                     .Select((answer, index) => new Data.Models.Answer
                     {
                         Id = answer.Id,

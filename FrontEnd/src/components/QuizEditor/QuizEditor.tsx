@@ -14,7 +14,7 @@ interface Parameters {
 
 export default function QuizEditor({quiz, setQuiz}: Parameters) {
 
-  const [questionIndex, setQuestionIndex] = useState<number>(0);
+  const [questionIndex, setQuestionIndex] = useState<number>(quiz.questions.length - 1);
   const [question, setQuestion] = useState<Question | undefined>(quiz.questions[questionIndex]);
 
   const navigate = useNavigate();
@@ -33,21 +33,23 @@ export default function QuizEditor({quiz, setQuiz}: Parameters) {
   return (
       <div className='QuizEditorContainer'>
         <div className='QuizEditorHeader'>
-          <h1 className='QuizDeRigorich' onClick={() => navigate('/')}>Quiz de Rigorich</h1>
-          <input
-            className='TextInput'
-            placeholder='Enter quiz title'
-            value={quiz.title}
-            onChange={e => setQuiz({...quiz, title: e.target.value})}
-          />
-          <button
-            className='TextButton QuizEditorSaveButton'
-            onClick={() => API.UpdateQuiz(quiz)
-              .then(async () => setQuiz(await API.GetQuiz(quiz.id)))
-              .then(() => alert('Saved!'))}
-          >
-            Save
-          </button>
+          <div className='QuizEditorHeaderInner'>
+            <h1 className='QuizDeRigorich' onClick={() => navigate('/')}>Quiz de Rigorich</h1>
+            <input
+              className='TextInput QuizEditorHeaderQuizTitle'
+              placeholder='Enter quiz title'
+              value={quiz.title}
+              onChange={e => setQuiz({...quiz, title: e.target.value})}
+            />
+            <button
+              className='TextButton QuizEditorSaveButton'
+              onClick={() => API.UpdateQuiz(quiz)
+                .then(async () => setQuiz(await API.GetQuiz(quiz.id)))
+                .then(() => alert('Saved!'))}
+            >
+              Save
+            </button>
+          </div>
         </div>
         { question &&
           <QuizEditorQuestion

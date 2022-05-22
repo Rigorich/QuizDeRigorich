@@ -1,4 +1,4 @@
-.QuizEditorQuestionItem {
+.QuizEditorFooterItem {
   width: 100%;
   height: 100%;
   display: flex;
@@ -7,7 +7,7 @@
   align-items: center;
 }
 
-.QuizEditorQuestionItemFirstRow {
+.QuizEditorFooterItemFirstRow {
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -15,7 +15,7 @@
   align-items: center;
 }
 
-.QuizEditorQuestionItemMoveButton {
+.QuizEditorFooterItemMoveButton {
   height: 20px;
   width: 20px;
   font-size: 20px;
@@ -28,11 +28,11 @@
   cursor: pointer;
 }
 
-.QuizEditorQuestionItemMoveButton:disabled {
+.QuizEditorFooterItemMoveButton:disabled {
   cursor: not-allowed;
 }
 
-.QuizEditorQuestionItemInfo {
+.QuizEditorFooterItemInfo {
   width: 100%;
   height: 100%;
   display: flex;
@@ -40,34 +40,34 @@
   justify-content: center;
 }
 
-.QuizEditorQuestionItemInfoImageDiv {
-  width: 80%;
-  height: 80%;
+.QuizEditorFooterItemInfoImageDiv {
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.QuizEditorQuestionItemInfoImage {
+.QuizEditorFooterItemInfoImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.QuizEditorQuestionItemInfoTitle {
+.QuizEditorFooterItemInfoTitle {
   font-size: 10px;
   max-height: 50px;
   overflow: hidden;
   word-break: break-word;
 }
 
-.QuizEditorQuestionItemSecondRow {
+.QuizEditorFooterItemSecondRow {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
 }
 
-.QuizEditorQuestionItemActionButton {
+.QuizEditorFooterItemActionButton {
   font-size: 15px;
   background-color: inherit;
 }

@@ -1,6 +1,6 @@
 import { QuestionType } from '../../models/QuestionType';
 import Quiz from '../../models/Quiz';
-import QuizEditorQuestionItem from './QuizEditorFooterQuestionItem';
+import QuizEditorQuestionItem from './QuizEditorFooterItem';
 import '../../styles/QuizEditor.css';
 
 interface Parameters {
@@ -30,7 +30,10 @@ export default function QuizEditorFooter({quiz, setQuiz, questionIndex, setQuest
     <div className='QuizEditorFooter'>
       <div className='QuizEditorFooterInner'>
         {quiz.questions.map((q, index) =>
-          <div className='QuizEditorFooterItem' key={q.id || Math.random()}>
+          <div
+            className={'QuizEditorFooterElement' + (index === questionIndex ? ' QuizEditorFooterElementSelected' : '')}
+            key={Math.random()}
+          >
             <QuizEditorQuestionItem
               quiz={quiz}
               setQuiz={setQuiz}
@@ -40,7 +43,7 @@ export default function QuizEditorFooter({quiz, setQuiz, questionIndex, setQuest
             />
           </div>
         )}
-        <div className='QuizEditorFooterItem'>
+        <div className='QuizEditorFooterElement'>
           <button 
             className='TextButton QuizEditorFooterNewQuestionButton'
             onClick={AddNewQuestion}

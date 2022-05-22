@@ -95,3 +95,53 @@
     font-size: 4vh;
     user-select: none;
 }
+
+@media (max-width: 900px) {
+
+  .QuizQuestionTitleDiv {
+    height: unset;
+  }
+  
+  .QuizQuestionTitle {
+    margin: 10px 30px 15px 30px;
+    font-size: 20px;
+  }
+
+  .QuizQuestionTimer {
+    height: 5px;
+  }
+
+  .QuizQuestionImageDiv {
+    height: 100%;
+  }
+  
+  .QuizQuestionAnswers {
+    flex-direction: column;
+  }
+  
+  .QuizQuestionAnswer {
+    width: 100%;
+    height: unset;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .QuizQuestionAnswerText {
+    padding: 20px;
+    font-size: 16px;
+    text-shadow: 1px 1px 2px black;
+  }
+  
+  .QuizQuestionAnswerSelect {
+      min-width: 30px;
+      min-height: 30px;
+      width: 30px;
+      height: 30px;
+      margin: 15px;
+      border-width: 3px;
+  }
+  
+  .QuizQuestionAnswerSelectMark {
+      font-size: 30px;
+  }
+}

@@ -1,5 +1,6 @@
+import Question from '../../models/Question';
 import Quiz from '../../models/Quiz';
-import '../../styles/QuizEditorQuestionItem.css';
+import '../../styles/QuizEditorFooterItem.css';
 
 interface Parameters {
   quiz: Quiz,
@@ -9,7 +10,7 @@ interface Parameters {
   myIndex: number,
 }
 
-export default function QuizEditorFooterQuestionItem({quiz, setQuiz, questionIndex, setQuestionIndex, myIndex}: Parameters) {
+export default function QuizEditorFooterItem({quiz, setQuiz, questionIndex, setQuestionIndex, myIndex}: Parameters) {
 
   const question = quiz.questions[myIndex];
 
@@ -26,7 +27,11 @@ export default function QuizEditorFooterQuestionItem({quiz, setQuiz, questionInd
   }
 
   function CopyQuestion() {
-    quiz.questions.push(quiz.questions[myIndex]);
+    const questionCopy = JSON.parse(JSON.stringify(quiz.questions[myIndex])) as Question;
+    questionCopy.id = 0;
+    questionCopy.answers.forEach(a => a.id = 0);
+
+    quiz.questions.push(questionCopy);
     setQuiz(JSON.parse(JSON.stringify(quiz)));
     setQuestionIndex(quiz.questions.length - 1);
   }
@@ -38,41 +43,41 @@ export default function QuizEditorFooterQuestionItem({quiz, setQuiz, questionInd
   }
 
   return (
-      <div className={'QuizEditorQuestionItem' + (myIndex === questionIndex ? ' QuizEditorFooterItemSelected' : '')}>
-        <div className='QuizEditorQuestionItemFirstRow'>
+      <div className='QuizEditorFooterItem'>
+        <div className='QuizEditorFooterItemFirstRow'>
           <button
-            className='QuizEditorQuestionItemMoveButton'
+            className='QuizEditorFooterItemMoveButton'
             disabled={myIndex === 0}
             onClick={() => SwapQuestions(myIndex - 1, myIndex)}
           >
             {'<'}
           </button>
           <div
-            className='QuizEditorQuestionItemInfo'
+            className='QuizEditorFooterItemInfo'
             onClick={() => setQuestionIndex(myIndex)}
           >
             {question.image
             ?
-              <div className='QuizEditorQuestionItemInfoImageDiv'>
-                <img className='QuizEditorQuestionItemInfoImage' src={question.image} />
+              <div className='QuizEditorFooterItemInfoImageDiv'>
+                <img className='QuizEditorFooterItemInfoImage' src={question.image} />
               </div>
             :
-              <p className='QuizEditorQuestionItemInfoTitle'>{question.text}</p>
+              <p className='QuizEditorFooterItemInfoTitle'>{question.text}</p>
             }
           </div>
           <button
-            className='QuizEditorQuestionItemMoveButton'
+            className='QuizEditorFooterItemMoveButton'
             disabled={myIndex === quiz.questions.length - 1}
             onClick={() => SwapQuestions(myIndex, myIndex + 1)}
           >
             {'>'}
           </button>
         </div>
-        <div className='QuizEditorQuestionItemSecondRow'>
-          <button className='ActionButton QuizEditorQuestionItemActionButton' onClick={CopyQuestion}>
+        <div className='QuizEditorFooterItemSecondRow'>
+          <button className='ActionButton QuizEditorFooterItemActionButton' onClick={CopyQuestion}>
             📋
           </button>
-          <button className='ActionButton QuizEditorQuestionItemActionButton' onClick={DeleteQuestion}>
+          <button className='ActionButton QuizEditorFooterItemActionButton' onClick={DeleteQuestion}>
             🗑️
           </button>
         </div>
