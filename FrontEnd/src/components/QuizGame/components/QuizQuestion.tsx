@@ -3,6 +3,7 @@ import UserAnswer from '../../../models/UserAnswer';
 import { QuestionType } from '../../../models/QuestionType';
 import SelectableAnswer from './Answers/SelectableAnswer';
 import '../../../styles/QuizQuestion.css';
+import OpenAnswer from './Answers/OpenAnswer';
 
 interface Parameters {
   question: Question,
@@ -23,6 +24,9 @@ export default function QuizQuestion({question, userAnswer, setUserAnswer}: Para
     setUserAnswer({...userAnswer, selectedIds: selectedIds});
   }
 
+  function onOpenAnswerChange(newValue: string): void {
+    setUserAnswer({...userAnswer, answerText: newValue});
+  }
 
   return (
     <div className='QuizQuestionContainer'>
@@ -57,6 +61,12 @@ export default function QuizQuestion({question, userAnswer, setUserAnswer}: Para
               isSelected={() => userAnswer.selectedIds.includes(a.id)}
               setIsSelected={(newState) => onMultipleAnswerSelect(a.id, newState)}
             />)
+        }
+        { question.type === QuestionType.Open &&
+            <OpenAnswer
+              text={userAnswer.answerText}
+              setText={onOpenAnswerChange}
+            />
         }
       </div>
     </div>

@@ -103,7 +103,7 @@ public class QuizHub : Hub<IQuizPlayer>
 
             await Clients.Group(quizCode).AskForQuestion();
 
-            await Task.Delay(TimeSpan.FromSeconds(Quizzes[quizCode].CurrentQuestion!.TimeLimitInSeconds));
+            await Task.Delay(TimeSpan.FromSeconds(1 + Quizzes[quizCode].CurrentQuestion!.TimeLimitInSeconds));
 
             await Clients.Group(quizCode).SendAnswer();
 
@@ -111,7 +111,7 @@ public class QuizHub : Hub<IQuizPlayer>
 
             await Clients.Group(quizCode).AskForPlayersInfo();
 
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(3));
         }
 
         await FinishQuiz(quizCode);
