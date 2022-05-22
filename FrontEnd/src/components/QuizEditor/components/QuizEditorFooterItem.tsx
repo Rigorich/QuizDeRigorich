@@ -1,6 +1,6 @@
-import Question from '../../models/Question';
-import Quiz from '../../models/Quiz';
-import '../../styles/QuizEditorFooterItem.css';
+import Question from '../../../models/Question';
+import Quiz from '../../../models/Quiz';
+import '../../../styles/QuizEditorFooterItem.css';
 
 interface Parameters {
   quiz: Quiz,

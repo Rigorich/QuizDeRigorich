@@ -9,7 +9,6 @@ import { QuizStatus } from './QuizStatus';
 import QuizInfo from '../../models/QuizInfo';
 import QuizResults from './components/QuizResults';
 import { Navigate, useParams } from 'react-router-dom';
-import QuestionResults from './components/QuestionResults';
 import QuizWaitingRoom from './components/QuizWaitingRoom';
 import SimpleInfoPage from '../SimpleInfoPage';
 
@@ -89,6 +88,10 @@ export default function QuizGame() {
 
     connection.onclose(async () => await startConnection());
     startConnection();
+
+    return () => {
+      connection.invoke<QuizInfo>('QuitQuiz', quizCode);
+    };
   }, []);
 
   async function AskForQuestion() {
@@ -148,12 +151,14 @@ export default function QuizGame() {
           />}
         { status === QuizStatus.QuestionResults &&
           results &&
-          <QuestionResults
+          <QuizResults
+            title='Standings'
             results={results}
           />}
         { status === QuizStatus.QuizResults &&
           results &&
           <QuizResults
+            title='Results'
             results={results}
           />}
       </>

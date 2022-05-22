@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import Answer from '../../models/Answer';
-import Question from '../../models/Question';
-import { QuestionType } from '../../models/QuestionType';
-import '../../styles/QuizEditorQuestion.css';
+import { useEffect } from 'react';
+import Answer from '../../../models/Answer';
+import Question from '../../../models/Question';
+import { QuestionType } from '../../../models/QuestionType';
+import '../../../styles/QuizEditorQuestion.css';
 import QuizEditorQuestionAnswer from './QuizEditorQuestionAnswer';
 
 interface Parameters {

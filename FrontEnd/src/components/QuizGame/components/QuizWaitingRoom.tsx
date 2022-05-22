@@ -13,15 +13,11 @@ export default function QuizWaitingRoom({quiz, players, start}: Parameters) {
 
   return (
     <div className='QuizWaitingRoomContainer'>
-      <h1 className='QuizWaitingRoomTitle'>{quiz.title}</h1>
-      <h2>Join code: {quiz.code}</h2>
-      <h2>Host: {quiz.hostNickname}</h2>
-      <h3>Players:</h3>
-      <div className='QuizWaitingRoomPlayersList'>
-      {players == null
-      ? <p>Please stand by...</p>
-      : players.map(p => <p key={p.id}>{p.nickname}</p>)}
+      <div className='QuizWaitingRoomTitleDiv'>
+        <h1 className='QuizWaitingRoomTitle'>{quiz.title}</h1>
       </div>
+      <p className='QuizWaitingRoomSubTitle'>Quiz game code</p>
+      <p className='QuizWaitingRoomCode'>{quiz.code}</p>
       { quiz.hostNickname === API.GetNickname() &&
       <button 
         className='TextButton QuizWaitingRoomPlayButton'
@@ -29,6 +25,18 @@ export default function QuizWaitingRoom({quiz, players, start}: Parameters) {
       >
         Start!
       </button>}
+      <p className='QuizWaitingRoomSubTitle'>Players</p>
+      <div className='QuizWaitingRoomPlayersList'>
+      {players &&
+        players.map(p => 
+          <p
+            className='QuizWaitingRoomPlayersListRow'
+            key={p.id}
+          >
+            {p.nickname === quiz.hostNickname ? '👑 ' : ''}{p.nickname}
+          </p>
+      )}
+      </div>
     </div>
   );
 }

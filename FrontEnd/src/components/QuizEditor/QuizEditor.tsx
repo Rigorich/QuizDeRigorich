@@ -3,8 +3,8 @@ import API from '../../API';
 import Question from '../../models/Question';
 import Quiz from '../../models/Quiz';
 import { useNavigate } from 'react-router-dom';
-import QuizEditorFooter from './QuizEditorFooter';
-import QuizEditorQuestion from './QuizEditorQuestion';
+import QuizEditorFooter from './components/QuizEditorFooter';
+import QuizEditorQuestion from './components/QuizEditorQuestion';
 import '../../styles/QuizEditor.css';
 
 interface Parameters {

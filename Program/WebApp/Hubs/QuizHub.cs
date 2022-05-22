@@ -56,11 +56,14 @@ public class QuizHub : Hub<IQuizPlayer>
 
         if (Quizzes[quizCode].Players.All(p => p.Id != _user.Id))
         {
-            Quizzes[quizCode].Players.Add(new()
+            if (Quizzes[quizCode].CurrentQuestion is null && !Quizzes[quizCode].Finished)
             {
-                Id = _user.Id,
-                Nickname = _user.Nickname,
-            });
+                Quizzes[quizCode].Players.Add(new()
+                {
+                    Id = _user.Id,
+                    Nickname = _user.Nickname,
+                });
+            }
         }
 
         await Groups.AddToGroupAsync(Context.ConnectionId, quizCode);
@@ -83,10 +86,16 @@ public class QuizHub : Hub<IQuizPlayer>
     {
         if (_user is null) throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
 
-        Quizzes[quizCode].Players.Remove(Quizzes[quizCode].Players.Single(p => p.Nickname == _user.Nickname));
+        var player = Quizzes[quizCode].Players.SingleOrDefault(p => p.Nickname == _user.Nickname);
+        if (player is null) return;
+
+        if (Quizzes[quizCode].CurrentQuestion is null && !Quizzes[quizCode].Finished)
+        {
+            Quizzes[quizCode].Players.Remove(player);
+        }
 
         await Clients.OthersInGroup(quizCode).AskForPlayersInfo();
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, quizCode);
+        _ = Groups.RemoveFromGroupAsync(Context.ConnectionId, quizCode);
     }
 
     #endregion
