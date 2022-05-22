@@ -40,8 +40,8 @@ public class SendAnswer
 
         answer.IsRight = question.Type switch
         {
-            QuestionType.Open => (question.Answers.FirstOrDefault(a => a.IsRight)?.Text ?? string.Empty).Trim().ToLower() == answer.AnswerText.Trim().ToLower(),
-            QuestionType.Single => (!rightAnswersIds.Any() && !answer.SelectedIds.Any()) || answer.SelectedIds.All(a => rightAnswersIds.Contains(a)),
+            QuestionType.Open => (question.Answers.FirstOrDefault(a => a.IsRight)?.Text ?? string.Empty).Replace(" ", "").ToLower() == answer.AnswerText.Replace(" ", "").ToLower(),
+            QuestionType.Single => rightAnswersIds.Any() ? (answer.SelectedIds.Any() && answer.SelectedIds.All(a => rightAnswersIds.Contains(a))) : (!answer.SelectedIds.Any()),
             QuestionType.Multiple => question.Answers.Where(a => a.IsRight).Select(a => a.Id).ToHashSet().SetEquals(answer.SelectedIds),
             _ => throw new ArgumentOutOfRangeException(),
         };

@@ -27,6 +27,17 @@
   width: 100%;
   height: 1vh;
   background-color: red;
+  transform-origin: left;
+
+  animation-name: ToZeroScaleX;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes ToZeroScaleX {
+  to {
+    transform: scaleX(0);
+  }
 }
 
 .QuizQuestionImageDiv {

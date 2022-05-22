@@ -33,8 +33,10 @@ export default function QuizQuestion({question, userAnswer, setUserAnswer}: Para
       <div className='QuizQuestionTitleDiv'>
         <h1 className='QuizQuestionTitle'>{question.text || 'Quiz de Rigorich'}</h1>
       </div>
-      <div className='QuizQuestionTimer'
-        style={{ animation: `width ${question.timeLimitInSeconds}s linear` }}>
+      <div
+        className='QuizQuestionTimer'
+        style={{ animationDuration: `${question.timeLimitInSeconds - 0.5}s` }}
+      >
       </div>
       <div className='QuizQuestionImageDiv'>
         <img
