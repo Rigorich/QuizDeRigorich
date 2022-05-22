@@ -8,19 +8,19 @@ interface Parameters {
 
 export default function LoginPage({onSuccessLogin}: Parameters) {
 
-  const [login, setLogin] = useState<string>('');
+  const [login, setLogin] = useState<string>(API.GetNickname());
   const [password, setPassword] = useState<string>('');
 
   async function TryLogin() {
     await API.Login(login, password)
       .then(() => onSuccessLogin())
-      .catch((e) => alert(e.response.data))
+      .catch((e) => alert(e?.response?.data || e?.response || e))
   }
 
   async function TryRegister() {
     await API.Register(login, password)
       .then(() => TryLogin())
-      .catch((e) => alert(e.response.data))
+      .catch((e) => alert(e?.response?.data || e?.response || e))
   }
 
   return (

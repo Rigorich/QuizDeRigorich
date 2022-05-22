@@ -18,7 +18,7 @@ function App() {
         {isSignedIn
         ?
         <>
-          <Route path='/' element={<MainPage />} />
+          <Route path='/' element={<MainPage onLogout={() => setIsSignedIn(false)} />} />
           <Route path='/quiz/:quizCode' element={<QuizGame />} />
           <Route path='/editor/:quizIdString' element={<QuizEditorPage />} />
           <Route path="*" element={<Navigate replace to='/' />} />

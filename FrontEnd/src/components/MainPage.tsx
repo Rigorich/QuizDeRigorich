@@ -5,7 +5,11 @@ import Quiz from '../models/Quiz';
 import '../styles/MainPage.css';
 import QuizDeRigorichHeader from './QuizDeRigorichHeader';
 
-export default function MainPage() {
+interface Parameters {
+  onLogout: () => void,
+}
+
+export default function MainPage({onLogout}: Parameters) {
 
   const [code, setCode] = useState<string>('');
   const [quizzes, setQuizzes] = useState<Quiz[] | undefined>(undefined);
@@ -14,7 +18,13 @@ export default function MainPage() {
   const [editQuizId, setEditQuizId] = useState<number | null>(null);
 
   async function ReloadQuizzes() {
-    await API.GetAllQuizzes().then(data => setQuizzes(data));
+    try {
+      await API.GetAllQuizzes().then(data => setQuizzes(data));
+    }
+    catch {
+      localStorage.removeItem('token');
+      onLogout();
+    }
   }
 
   useEffect(() => {
