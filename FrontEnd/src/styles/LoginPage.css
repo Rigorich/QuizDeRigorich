@@ -1,0 +1,38 @@
+.LoginPageContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.LoginPageHeader {
+  margin: 50px 20px 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 0;
+}
+
+.LoginPageLoginInputBox {
+  height: 200px;
+  max-width: min(400px, 80vw);
+  margin-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.LoginPageButtonsRow {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.LoginPageTextButton {
+  width: 120px;
+  height: 50px;
+}

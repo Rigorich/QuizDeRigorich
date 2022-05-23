@@ -1,29 +1,36 @@
-// @ts-nocheck
-
-import React from 'react';
-import './App.css';
+import { useState } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import API from './API';
+import LoginPage from './components/LoginPage';
+import MainPage from './components/MainPage';
+import QuizEditorPage from './components/QuizEditor/QuizEditorPage';
+import QuizGame from './components/QuizGame/QuizGame';
+import './index.css';
 
 function App() {
+
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(localStorage.getItem('token') != null);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={
-          'https://steamuserimages-a.akamaihd.net/ugc/925960612643321840/D18CD4FC8A345B20B731528AA347C2F1A80DC1AD/'} 
-          className="App-logo" 
-          alt="logo" />
-        <p>
-          Someday here will be Quiz <br/>
-          But yet, you can press this wunderbar buton!
-        </p>
-        <button 
-          onClick={() => 
-            fetch(window.config.baseUrl + 'api/Test')
-            .then(r => r.text().then(m => alert(m)))}
-        >
-          Test
-        </button>
-      </header>
-    </div>
+    <main className="App">
+      <button style={{display: 'none'}} onClick={async () => alert(await API.Test())}>Test</button>
+      <Routes>
+        {isSignedIn
+        ?
+        <>
+          <Route path='/' element={<MainPage onLogout={() => setIsSignedIn(false)} />} />
+          <Route path='/quiz/:quizCode' element={<QuizGame />} />
+          <Route path='/editor/:quizIdString' element={<QuizEditorPage />} />
+          <Route path="*" element={<Navigate replace to='/' />} />
+        </>
+        :
+        <>
+          <Route path='/login' element={<LoginPage onSuccessLogin={() => setIsSignedIn(true)} />} />
+          <Route path="*" element={<Navigate replace to='/login' />} />
+        </>
+        }
+      </Routes>
+    </main>
   );
 }
 

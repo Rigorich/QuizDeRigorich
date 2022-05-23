@@ -1,0 +1,74 @@
+.QuizEditorFooterItem {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.QuizEditorFooterItemFirstRow {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.QuizEditorFooterItemMoveButton {
+  height: 20px;
+  width: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  border-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: inherit;
+  cursor: pointer;
+}
+
+.QuizEditorFooterItemMoveButton:disabled {
+  cursor: not-allowed;
+}
+
+.QuizEditorFooterItemInfo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.QuizEditorFooterItemInfoImageDiv {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.QuizEditorFooterItemInfoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.QuizEditorFooterItemInfoTitle {
+  font-size: 10px;
+  max-height: 50px;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.QuizEditorFooterItemSecondRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.QuizEditorFooterItemActionButton {
+  font-size: 15px;
+  background-color: inherit;
+}

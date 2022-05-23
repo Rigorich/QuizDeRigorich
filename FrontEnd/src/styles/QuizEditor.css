@@ -1,0 +1,90 @@
+.QuizEditorContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: inherit;
+}
+
+.QuizEditorHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.QuizEditorHeaderInner {
+  width: 100%;
+  height: 100%;
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.QuizEditorHeaderQuizTitle {
+  width: 50%;
+}
+
+.QuizEditorSaveButton {
+  width: 120px;
+  height: 50px;
+}
+
+.QuizEditorFooter {
+  width: 100%;
+  height: 125px;
+  display: flex;
+  background-color: #EEEEEE;
+}
+
+.QuizEditorFooterInner {
+  min-width: 100%;
+  height: 100%;
+  display: flex;
+  overflow-x: scroll;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.QuizEditorFooterElement {
+  height: 80px;
+  min-width: 100px;
+  width: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.QuizEditorFooterElementSelected {
+  background-color: #CCCCCC;
+}
+
+.QuizEditorFooterNewQuestionButton {
+  width: 40px;
+  height: 40px;
+  font-size: 30px;
+}
+
+@media (max-width: 900px) {
+
+  .QuizEditorHeaderInner {
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 200px;
+  }
+  
+  .QuizEditorHeaderQuizTitle {
+    width: 90%;
+  }
+
+  .QuizEditorFooter {
+    margin-top: 20px;
+  }
+  
+}

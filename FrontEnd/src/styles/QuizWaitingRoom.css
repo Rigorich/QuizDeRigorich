@@ -1,0 +1,51 @@
+.QuizWaitingRoomContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: inherit;
+}
+
+.QuizWaitingRoomTitleDiv {
+  width: 100%;
+  background-color: white;
+}
+
+.QuizWaitingRoomTitle {
+  background-color: white;
+  margin: 20px;
+}
+
+.QuizWaitingRoomSubTitle {
+  margin-top: 50px;
+  font-size: 20px;
+  font-style: italic;
+}
+
+.QuizWaitingRoomCode {
+  font-size: 50px;
+}
+
+.QuizWaitingRoomPlayButton {
+  margin-top: 50px;
+  width: 120px;
+  height: 50px;
+}
+
+.QuizWaitingRoomPlayersList {
+  margin: 20px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.QuizWaitingRoomPlayersListRow {
+  margin: 5px;
+}
