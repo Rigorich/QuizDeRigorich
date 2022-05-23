@@ -22,7 +22,11 @@ export default function QuizEditorQuestion({question, setQuestion}: Parameters) 
   function SynchronizeAnswersWithQuestionType() {
     if (question.type === QuestionType.Open) {
       if (answers.length !== 1 || !answers[0].isRight) {
-        const oneAnswer = answers.slice(0, 1) || [{id: 0, priority: null, text: 'answer', isRight: true}];
+        const oneAnswer = answers.slice(0, 1);
+
+        while (oneAnswer.length < 1)
+          oneAnswer.push({id: 0, priority: null, text: 'answer', isRight: true});
+        
         oneAnswer[0].isRight = true;
         setAnswers(oneAnswer);
       }
