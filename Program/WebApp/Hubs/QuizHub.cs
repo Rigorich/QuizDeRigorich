@@ -54,16 +54,13 @@ public class QuizHub : Hub<IQuizPlayer>
         if (_user is null) throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
         if (!Quizzes.ContainsKey(quizCode)) throw new HttpRequestException("Unknown quiz code", null, HttpStatusCode.BadRequest);
 
-        if (Quizzes[quizCode].Players.All(p => p.Id != _user.Id))
+        if (!Quizzes[quizCode].Finished && Quizzes[quizCode].Players.All(p => p.Id != _user.Id))
         {
-            if (Quizzes[quizCode].CurrentQuestion is null && !Quizzes[quizCode].Finished)
+            Quizzes[quizCode].Players.Add(new()
             {
-                Quizzes[quizCode].Players.Add(new()
-                {
-                    Id = _user.Id,
-                    Nickname = _user.Nickname,
-                });
-            }
+                Id = _user.Id,
+                Nickname = _user.Nickname,
+            });
         }
 
         await Groups.AddToGroupAsync(Context.ConnectionId, quizCode);
